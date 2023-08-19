@@ -6,11 +6,12 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/18 15:43:19 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/19 17:45:41 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+# include <unistd.h>
 
 long	stol(char *str)
 {
@@ -53,10 +54,13 @@ void	pn(int num)
 	write(1, &"0123456789"[num % 10], 1);
 }
 
-void	ps(char *str)
+void	ps(char *str, int mode)
 {
-	while (*str)
-		write(1, str++, 1);
+	if (!mode)
+		while (*str)
+			write(1, str++, 1);
+	else
+		write(1, &str, 1);
 }
 
 void	prt(char *string, ...)
@@ -74,9 +78,9 @@ void	prt(char *string, ...)
 			if (string[i] == 'i')
 				pn(va_arg(args, int));
 			else if (string[i] == 's')
-				ps(va_arg(args, char *));
+				ps(va_arg(args, char *), 0);
 			else if (string[i] == 'c')
-				write(1, &"abcdefghijklmnopqrstu"[(va_arg(args, int)) - 97], 1);
+				ps(va_arg(args, char *), 1);
 			i++;
 		}
 		else

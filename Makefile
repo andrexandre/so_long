@@ -41,10 +41,16 @@ fclean:		clean
 			@ rm -rf objs
 			@ echo "$(GREEN)\nAll stuff removed 🗑️\n$(END)"
 
-run:	${NAME}
+run: ${NAME}
+	@echo "$(CYAN)Window displayed. $(BLUE)Ctrl + C to exit."; \
+	./${NAME}
+
+t	:= 10
+
+t:	${NAME}
 	@./${NAME} & PID=$$!; \
 	echo "$(CYAN)Window displayed. $(BLUE)PID: $$PID"; \
-	sleep 3; \
+	sleep ${t}; \
 	kill $$PID
 
 re:			fclean all

@@ -6,18 +6,32 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/18 15:43:37 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/19 16:25:55 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
-# include <mlx.h>
-# include <unistd.h>
-# include <string.h>
-# include <stdlib.h>
 # include <fcntl.h>
+# include <mlx.h>
 # include <stdarg.h>
+# include <stdlib.h>
+# include <string.h>
+// # include <unistd.h>
+# define reset put_square(&image, 0, 0, length, width, 0, 0);
+
+# ifndef length
+#  define length 900
+# endif
+# ifndef width
+#  define width 900
+# endif
+
+typedef struct s_vars
+{
+	void	*mlx;
+	void	*win;
+}			t_vars;
 
 typedef struct s_data
 {
@@ -30,10 +44,9 @@ typedef struct s_data
 
 // so_long
 
-
 // tool_lib
-long	stol(char *str);
-int		stoi(char *str);
-void	prt(char *string, ...);
+long		stol(char *str);
+int			stoi(char *str);
+void		prt(char *string, ...);
 
 #endif
