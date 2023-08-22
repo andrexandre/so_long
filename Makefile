@@ -10,7 +10,7 @@ CC        := cc
 FLAGS    := -Wall -Wextra -Werror 
 
 SRC        :=      so_long.c \
-                         tool_lib.c 
+                         tool_lib.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f
@@ -52,6 +52,9 @@ t:	${NAME}
 	echo "$(CYAN)Window displayed. $(BLUE)PID: $$PID"; \
 	sleep ${t}; \
 	kill $$PID
+
+v:	${NAME}
+	@valgrind ./${NAME}
 
 re:			fclean all
 
