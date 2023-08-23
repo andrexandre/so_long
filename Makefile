@@ -9,8 +9,7 @@ NAME        := so_long
 CC        := cc
 FLAGS    := -Wall -Wextra -Werror 
 
-SRC        :=      so_long.c \
-                         tool_lib.c
+SRC        :=      so_long.c tool_lib.c get_next_line.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f

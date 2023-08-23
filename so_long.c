@@ -6,22 +6,26 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/22 20:10:38 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/23 19:24:18 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// 💀 lines to skip * line_size + pixels to skip * bits_per_pixel
 void	my_mlx_pixel_put(t_data *image, int x, int y, int color)
 {
 	char	*dst;
 
 	if (x < 0 || y < 0)
-		prt("Warning -x | -y, x: %i, y: %i\n", x, y);
+		prt("Neg. value, x: %i, y: %i\n", x, y);
 	if (x < 0)
 		x = 0;
 	if (y < 0)
 		y = 0;
+	// if (x >= 0 && y >= 0 && x < image->width && y < image->height)
+	// {
+	// }
 	dst = image->addr + (y * image->line_length + x * (image->bits_per_pixel / 8));
 	*(unsigned int *)dst = color;
 }
@@ -127,32 +131,29 @@ void	put_grad_square(t_data *image, int x1, int y1, int x2, int y2, int just_per
 	}
 }
 
-int		get_opposite(int color)
+int	quit(t_vars *heh)
 {
-	return(~color);
-}
-
-int	quit(t_vars *vars)
-{
-	mlx_destroy_image(vars->mlx, vars->p_image.img);
-	mlx_destroy_window(vars->mlx, vars->win);
-	mlx_destroy_display(vars->mlx);
-	free(vars->mlx);
+	if (heh->p_image.img)
+		mlx_destroy_image(heh->mlx, heh->p_image.img);
+	if (heh)
+		mlx_destroy_window(heh->mlx, heh->win);
+	mlx_destroy_display(heh->mlx);
+	free(heh->mlx);
 	exit(EXIT_SUCCESS);
 }
 
-int	key_hook(int keycode, t_vars *vars)
+int	key_hook(int keycode, t_vars *heh)
 {
 	if (keycode == ESC_KEY)
-		return (quit(vars));
+		return (quit(heh));
 	if (keycode == UP_KEY || keycode == W_KEY)
-		(*vars).y -= 10;
+		(*heh).y -= 10;
 	else if (keycode == LEFT_KEY || keycode == A_KEY)
-		(*vars).x -= 10;
+		(*heh).x -= 10;
 	else if (keycode == RIGHT_KEY || keycode == D_KEY)
-		(*vars).x += 10;
+		(*heh).x += 10;
 	else if (keycode == DOWN_KEY || keycode == S_KEY)
-		(*vars).y += 10;
+		(*heh).y += 10;
 	if (keycode < 32 || keycode > 126)
 		prt("keycode: %i = Invalid char\n", keycode);
 	else
@@ -160,170 +161,164 @@ int	key_hook(int keycode, t_vars *vars)
 	return (0);
 }
 
-int	in(t_vars *vars)
-{
-	prt("Hello!\n");
-	(void)vars;
-	return (0);
-}
-
-int	out(t_vars *vars)
-{
-	prt("Bye!\n");
-	(void)vars;
-	return (0);
-}
-
-int	mouse_hook(int x, int y, int keycode, t_vars *vars)
+int	mouse_click_hook(int x, int y, int keycode, t_vars *heh)
 {
 	prt("x: %i, y: %i, keycode: %i\n", x, y, keycode);
-	prt("x %i y %i\n", (*vars).x, (*vars).y);
-	(*vars).r = 0;
-	// vars->y = y;
-	prt("\033[1;31mpassedpadpassedpasassed\n");
+	usleep(1000 * 10);
+	// heh->x = x;
+	// heh->y = y;
+	// acessing the struct's variables is illegal and gives seg fault?
+	(void)heh;
+	// prt("\033[1;31mPassed\n");
 	return (0);
 }
-// acessing the struct's variables is illegal and gives seg fault?
 
-// by chatgpt
-void put_circle(t_data *image, int xc, int yc, int radius, int color) {
-    int x = radius;
-    int y = 0;
-    int err = 0;
-
-    while (x >= y) {
-        my_mlx_pixel_put(image, xc + x, yc + y, color);
-        my_mlx_pixel_put(image, xc + y, yc + x, color);
-        my_mlx_pixel_put(image, xc - y, yc + x, color);
-        my_mlx_pixel_put(image, xc - x, yc + y, color);
-        my_mlx_pixel_put(image, xc - x, yc - y, color);
-        my_mlx_pixel_put(image, xc - y, yc - x, color);
-        my_mlx_pixel_put(image, xc + y, yc - x, color);
-        my_mlx_pixel_put(image, xc + x, yc - y, color);
-        if (err <= 0) {
-            y += 1;
-            err += 2 * y + 1;
-        }
-        if (err > 0) {
-            x -= 1;
-            err -= 2 * x + 1;
-        }
-    }
-}
-
-// by chatgpt
-void put_filled_circle(t_data *image, int xc, int yc, int radius, int color) {
-    int x = radius;
-    int y = 0;
-    int err = 0;
-
-    while (x >= y) {
-        int i;
-        for (i = xc - x; i <= xc + x; i++) {
-            my_mlx_pixel_put(image, i, yc + y, color);
-            my_mlx_pixel_put(image, i, yc - y, color);
-        }
-        for (i = xc - y; i <= xc + y; i++) {
-            my_mlx_pixel_put(image, i, yc + x, color);
-            my_mlx_pixel_put(image, i, yc - x, color);
-        }
-        if (err <= 0) {
-            y += 1;
-            err += 2 * y + 1;
-        }
-        if (err > 0) {
-            x -= 1;
-            err -= 2 * x + 1;
-        }
-    }
-}
-
-int	power(t_vars *vars)
+// by AI
+void put_circle(t_data *image, int xc, int yc, int radius, int just_perimeter, int color)
 {
-	mlx_destroy_image(vars->mlx, vars->p_image.img);
-	// put_square(&vars->p_image, 0, 0, win_length, win_width, 0, argb(0, (*vars).r, (*vars).g, (*vars).b));
-	// mlx_put_image_to_window((*vars).mlx, (*vars).win, vars->p_image.img, 0, 0);
-	usleep(1000 * 3);
-	// if ((*vars).r == 255 && (*vars).g < 255 && (*vars).b == 0)
-	// 	(*vars).g++;
-	// else if ((*vars).g == 255 && (*vars).r > 0)
-	// 	(*vars).r--;
-	// else if ((*vars).g == 255 && (*vars).b < 255)
-	// 	(*vars).b++;
-	// else if ((*vars).b == 255 && (*vars).g > 0)
-	// 	(*vars).g--;
-	// else if ((*vars).b == 255 && (*vars).r < 255)
-	// 	(*vars).r++;
-	// else if ((*vars).r == 255 && (*vars).b > 0)
-	// 	(*vars).b--;
-	vars->p_image.img = mlx_xpm_file_to_image(vars->mlx, "./cursor.xpm", &vars->p_image.width, &vars->p_image.height);
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->p_image.img, 0, 0);
-	// mlx_put_image_to_window(vars->mlx, vars->win, vars->p_image.img, (*vars).x - 64, (*vars).y - 64);
-	
-	// put_filled_circle(&vars->p_image, (*vars).x, (*vars).y, 30, 0);
-	// put_square((*vars).img, (*vars).x - 5, (*vars).y - 5, (*vars).x + 5, (*vars).y + 5, 0, 0);
-	// prt("x: %i, y: %i, keycode: %i\n", x, y, keycode);
+	int x = radius;
+	int y = 0;
+	int err = 0;
+	int i;
+
+	while (x >= y)
+	{
+		if (just_perimeter)
+		{
+			my_mlx_pixel_put(image, xc + x, yc + y, color);
+			my_mlx_pixel_put(image, xc + y, yc + x, color);
+			my_mlx_pixel_put(image, xc - y, yc + x, color);
+			my_mlx_pixel_put(image, xc - x, yc + y, color);
+			my_mlx_pixel_put(image, xc - x, yc - y, color);
+			my_mlx_pixel_put(image, xc - y, yc - x, color);
+			my_mlx_pixel_put(image, xc + y, yc - x, color);
+			my_mlx_pixel_put(image, xc + x, yc - y, color);
+		}
+		else
+		{
+			for (i = xc - x; i <= xc + x; i++)
+			{
+				my_mlx_pixel_put(image, i, yc + y, color);
+				my_mlx_pixel_put(image, i, yc - y, color);
+			}
+			for (i = xc - y; i <= xc + y; i++)
+			{
+				my_mlx_pixel_put(image, i, yc + x, color);
+				my_mlx_pixel_put(image, i, yc - x, color);
+			}
+		}
+		if (err <= 0)
+		{
+			y += 1;
+			err += 2 * y + 1;
+		}
+		if (err > 0)
+		{
+			x -= 1;
+			err -= 2 * x + 1;
+		}
+	}
+}
+
+int	rbgc(t_vars *heh)
+{
+	int millisecond = 1000;
+	mlx_destroy_image(heh->mlx, heh->p_image.img);
+	heh->p_image.img = mlx_new_image(heh->mlx, heh->win_width, heh->win_height);
+	heh->p_image.addr = mlx_get_data_addr(heh->p_image.img, &heh->p_image.bits_per_pixel,
+			&heh->p_image.line_length, &heh->p_image.endian);
+	put_square(&heh->p_image, 0, 0, heh->win_width, heh->win_height, 0, argb(0, (*heh).r, (*heh).g, (*heh).b));
+	mlx_put_image_to_window((*heh).mlx, (*heh).win, heh->p_image.img, 0, 0);
+	if ((*heh).r == 255 && (*heh).g < 255 && (*heh).b == 0)
+		(*heh).g++;
+	else if ((*heh).g == 255 && (*heh).r > 0)
+		(*heh).r--;
+	else if ((*heh).g == 255 && (*heh).b < 255)
+		(*heh).b++;
+	else if ((*heh).b == 255 && (*heh).g > 0)
+		(*heh).g--;
+	else if ((*heh).b == 255 && (*heh).r < 255)
+		(*heh).r++;
+	else if ((*heh).r == 255 && (*heh).b > 0)
+		(*heh).b--;
+	put_circle(&heh->p_image, (*heh).x, (*heh).y, 30, 0, 0);
+	usleep(millisecond * 10);
 	return (0);
+}
+
+int	fti(t_vars *heh)
+{
+	int millisecond = 1000;
+	mlx_destroy_image(heh->mlx, heh->p_image.img);
+	heh->p_image.img = mlx_xpm_file_to_image(heh->mlx, ".xpm/tile.xpm", &heh->p_image.width, &heh->p_image.height);
+	mlx_put_image_to_window(heh->mlx, heh->win, heh->p_image.img, (*heh).x - 64, (*heh).y - 64);
+	usleep(millisecond * 100);
+	return (0);
+}
+
+void p(int x, int y)
+{
+	prt("n1: %i, n2: %i\n", x, y);
+}
+
+void check_map_len(char *str)
+{
+	int fd = open(str, O_RDONLY);
+	int i = 0;
+	char *buffer;
+	while ((buffer = get_next_line(fd)))
+	{
+		prt("%i:\"%s\"\n", i, buffer);
+		free(buffer);
+		i++;
+	}
 }
 
 int	main(void)
 {
-	t_vars	vars;
+	static t_vars	heh;
+	heh.r = 255;
+	heh.b = 0;
+	heh.g = 0;
+	heh.win_width = 900;
+	heh.win_height = 900;
+	// heh.win_width = tile_length * ft_strlen(buffer);
 
-	vars.mlx = mlx_init();
-	vars.win = mlx_new_window(vars.mlx, win_length, win_width, "So long window");
-	// vars.p_image.img = mlx_new_image(vars.mlx, win_length, win_width);
-	// vars.p_image.addr = mlx_get_data_addr(vars.p_image.img, &vars.p_image.bits_per_pixel,
-	// 		&vars.p_image.line_length, &vars.p_image.endian);
-	vars.r = 255;
-	vars.b = 0;
-	vars.g = 0;
-	vars.x = win_length / 2;
-	vars.y = win_width / 2;
-	// put_grad_square(&vars.p_image, 5, 0, win_length - 5, 50, 0);
-	// mlx_put_image_to_window(vars.mlx, vars.win, vars.p_image.img, 0, 0);
-	// mlx_hook(vars.win, 2, 1L<<0, close_all, &vars);
-	mlx_hook(vars.win, 17, 0, quit, &vars);
-	vars.p_image.img = mlx_xpm_file_to_image(vars.mlx, "./cursor.xpm", &vars.p_image.width, &vars.p_image.height);
-	mlx_put_image_to_window(vars.mlx, vars.win, vars.p_image.img, 0, 0);
-	// mlx_hook(vars.win, 6, 1L<<6, mouse_hook, &vars);
-	mlx_loop_hook(vars.mlx, power, &vars);
-	mlx_loop(vars.mlx);
+	heh.x = heh.win_width / 2;
+	heh.y = heh.win_height / 2;
+	heh.mlx = mlx_init();
+	heh.win = mlx_new_window(heh.mlx, heh.win_width, heh.win_height, "So long window");
+	
+	// check_map_len("maps/test.ber");
+	heh.p_image.img = mlx_new_image(heh.mlx, heh.win_width, heh.win_height);
+	heh.p_image.addr = mlx_get_data_addr(heh.p_image.img, &heh.p_image.bits_per_pixel, &heh.p_image.line_length, &heh.p_image.endian);
+	put_square(&heh.p_image, 0, 0, heh.win_width, heh.win_height, 0, argb(0, 0, 255, 0));
+	// mlx_put_image_to_window(heh.mlx, heh.win, heh.p_image.img, 0, 0);
+	// int y = 0, x = 0;
+	// heh.p_image.img = mlx_xpm_file_to_image(heh.mlx, "./xpm/tile.xpm", &heh.p_image.width, &heh.p_image.height);
+	// while (y < heh.win_width - heh.p_image.width)
+	// {
+	// 	while (x < heh.win_height - heh.p_image.width)
+	// 	{
+	// 		mlx_put_image_to_window(heh.mlx, heh.win, heh.p_image.img, x, y);
+	// 		x += heh.p_image.width;
+	// 	}
+	// 	x = 0;
+	// 	y += heh.p_image.height;
+	// }
+	// p(heh.p_image.width, heh.p_image.height);
+	// seg fault with xpm
+
+	mlx_loop_hook(heh.mlx, rbgc, &heh);
+	// mlx_loop_hook(heh.mlx, fti, &heh);
+	mlx_hook(heh.win, 2, 1L<<0, key_hook, &heh);
+	mlx_hook(heh.win, 17, 0, quit, &heh);
+	mlx_loop(heh.mlx);
 	return (0);
 }
 /*
-x = ---->
-y =
-|
-|
-\/
-	// 0x00FF0000 = argb(0, 255, 0, 0)
-	int millisecond = 1000 * 3;
-	int r = 255;
-	int g = 0;
-	int b = 0;
-	put_grad_square(&image, 5, 5, 1000, 50, 1);
-	while (1)
-	{
-		put_square(&image, 0, 0, 300, 300, 0, argb(0, r, g, b));
-		mlx_put_image_to_window(mlx, mlx_win, image.img, 0, 0);
-		usleep(millisecond);
-		if (r == 255 && g < 255 && b == 0)
-			g++;
-		else if (g == 255 && r > 0)
-			r--;
-		else if (g == 255 && b < 255)
-			b++;
-		else if (b == 255 && g > 0)
-			g--;
-		else if (b == 255 && r < 255)
-			r++;
-		else if (r == 255 && b > 0)
-			b--;
-	}
-	// mlx_hook(vars.win, 7, 1L<<4, in, &vars);
-	// mlx_hook(vars.win, 8, 1L<<5, out, &vars);
-	// mlx_hook(vars.win, 6, 1L<<6, mouse_hook, &vars);
-	// mlx_mouse_hook(vars.win, mouse_hook, &vars);
-
+x Width, y length and y height
+x Largura, y comprimento e y altura
+	// put_grad_square(&heh.p_image, 5, 0, heh.win_width - 5, 50, 0);
+	// mlx_string_put(heh.mlx, heh.win, 100, 500, argb(0, 255, 255, 255), "Howdy people!");
 */
