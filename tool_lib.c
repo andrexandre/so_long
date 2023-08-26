@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/19 17:45:41 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/24 14:32:55 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ void	pn(int num)
 
 void	ps(char *str, int mode)
 {
+	if (!str)
+	{
+		write(1, "(null)", 6);
+		return ;
+	}
 	if (!mode)
 		while (*str)
 			write(1, str++, 1);

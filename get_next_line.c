@@ -6,28 +6,31 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 14:44:07 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/23 18:51:16 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/25 12:05:02 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-size_t	ft_strlen(char *s)
+int	ft_strlen(char *s, int mode)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!s)
 		return (0);
 	while (s[i] && s[i] != '\n')
 		i++;
-	return (i + (s[i] == '\n'));
+	if (!mode)
+		return (i + (s[i] == '\n'));
+	else
+		return (i);
 }
 
-void	ft_bzero(void *s, size_t n)
+void	ft_bzero(void *s, int n)
 {
-	unsigned int	i;
-	char			*ptr;
+	int		i;
+	char	*ptr;
 
 	i = 0;
 	ptr = (char *)s;
@@ -44,7 +47,7 @@ char	*ft_strjoin_gnl(char *s1, char *s2)
 	int		j;
 	char	*str;
 
-	str = (char *)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
+	str = (char *)malloc(ft_strlen(s1, 0) + ft_strlen(s2, 0) + 1);
 	if (!str)
 		return (NULL);
 	i = -1;

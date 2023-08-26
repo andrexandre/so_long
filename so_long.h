@@ -6,22 +6,23 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/23 19:03:14 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/26 18:06:39 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
-# include <fcntl.h>
 # include <mlx.h>
+# include <fcntl.h>
 # include <stdarg.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 5
+#  define BUFFER_SIZE 100
 # endif
+
 # define W_KEY 119
 # define A_KEY 97
 # define S_KEY 115
@@ -31,8 +32,8 @@
 # define DOWN_KEY 65364
 # define RIGHT_KEY 65363
 # define ESC_KEY 65307
-# define tile_length 56
-# define tile_width 60
+# define TILE_WIDTH 56
+# define TILE_HEIGHT 60
 
 typedef struct s_data
 {
@@ -50,24 +51,34 @@ typedef struct s_vars
 	void	*mlx;
 	void	*win;
 	t_data	p_image;
+	int		win_width;
+	int		win_height;
+	char	**map;
+	int		collectibles;
 	int		r;
 	int		g;
 	int		b;
 	int		x;
 	int		y;
-	int		win_width;
-	int		win_height;
 }			t_vars;
 
 // so_long
 
 // tool_lib
-long		stol(char *str);
-int			stoi(char *str);
-void		prt(char *string, ...);
+long	stol(char *str);
+int		stoi(char *str);
+void	prt(char *string, ...);
 
 // get_next_line
-size_t	ft_strlen(char *s);
+int		ft_strlen(char *s, int mode);
 char	*get_next_line(int fd);
+
+// trash
+
+void	put_square(t_data *image, int x1, int y1, int x2, int y2, 
+			int just_perimeter, int color);
+int		argb(double a, int r, int g, int b);
+void	put_circle(t_data *image, int xc, int yc, int radius, 
+			int just_perimeter, int color);
 
 #endif

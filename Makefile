@@ -8,8 +8,8 @@ CYAN 		:= \033[1;36m
 NAME        := so_long
 CC        := cc
 FLAGS    := -Wall -Wextra -Werror 
-
-SRC        :=      so_long.c tool_lib.c get_next_line.c
+# DONT RUN FSANITISE AND VALGRIND AT THE SAME TIME
+SRC        :=      so_long.c tool_lib.c get_next_line.c trash.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f
@@ -44,15 +44,23 @@ run: ${NAME}
 	@echo "$(CYAN)Window displayed. $(BLUE)Ctrl + C to exit."; \
 	./${NAME}
 
+v: ${NAME}
+		@output=$$(valgrind --leak-check=full ./${NAME} 2>&1); \
+		if echo "$$output" | grep -q 'freed' && echo "$$output" | grep -q '0 errors' ; then\
+			echo -n "$(GREEN)"; echo "$$output" | grep -E 'freed|total|ERROR S' | sed 's/^[^ ]* //';\
+		else\
+			echo -n "$(RED)"; echo "$$output" | grep -E 'total|ERROR S' | sed 's/^[^ ]* //';\
+		fi;
+
 t	:= 10
 
 t:	${NAME}
 	@./${NAME} & PID=$$!; \
-	echo "$(CYAN)Window displayed. $(BLUE)PID: $$PID"; \
+	echo "$(CYAN)Window displayed. $(BLUE)PID: $$PID$(END)"; \
 	sleep ${t}; \
 	kill $$PID
 
-v:	${NAME}
+val:	${NAME}
 	@valgrind ./${NAME}
 
 re:			fclean all
