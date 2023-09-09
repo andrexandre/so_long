@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/26 18:06:39 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/29 17:53:07 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@
 # define DOWN_KEY 65364
 # define RIGHT_KEY 65363
 # define ESC_KEY 65307
-# define TILE_WIDTH 56
-# define TILE_HEIGHT 60
 
-typedef struct s_data
+// # define TILE_WIDTH 56
+// # define TILE_HEIGHT 60
+
+typedef struct s_image
 {
 	void	*img;
 	char	*addr;
@@ -44,23 +45,27 @@ typedef struct s_data
 	int		endian;
 	int		width;
 	int		height;
-}			t_data;
+}			t_image;
 
-typedef struct s_vars
+typedef struct s_game
 {
 	void	*mlx;
 	void	*win;
-	t_data	p_image;
+	t_image	p_image;
 	int		win_width;
 	int		win_height;
+	int		tile_width;
+	int		tile_height;
 	char	**map;
+	char	**temp;
 	int		collectibles;
+	char	*path;
 	int		r;
 	int		g;
 	int		b;
 	int		x;
 	int		y;
-}			t_vars;
+}			t_game;
 
 // so_long
 
@@ -75,10 +80,14 @@ char	*get_next_line(int fd);
 
 // trash
 
-void	put_square(t_data *image, int x1, int y1, int x2, int y2, 
+void	my_mlx_pixel_put(t_image *image, int x, int y, int color);
+void	put_line(t_image *image, int x1, int y1, int x2, int y2, int color);
+void	put_square(t_image *image, int x1, int y1, int x2, int y2, 
 			int just_perimeter, int color);
 int		argb(double a, int r, int g, int b);
-void	put_circle(t_data *image, int xc, int yc, int radius, 
+void	put_circle(t_image *image, int xc, int yc, int radius, 
 			int just_perimeter, int color);
-
+void	p(int x, int y);
+void	put_grad_square(t_image *image, int x1, int y1, int x2, int y2, 
+		int just_perimeter);
 #endif

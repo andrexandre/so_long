@@ -3,34 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   trash.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 17:07:58 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/26 17:13:16 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/28 11:37:02 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-	// if (x >= 0 && y >= 0 && x < image->width && y < image->height)
-	// in the last 2 lines if i want to prevent putting pixel in illegal space
+// if i want to use the prevention of putting pixel in illegal space
+// and i didnt use the new image i have to set the image wid/hei myself
 // lines to skip * line_size + pixels to skip * bits_per_pixel
-void	my_mlx_pixel_put(t_data *image, int x, int y, int color)
+void	my_mlx_pixel_put(t_image *image, int x, int y, int color)
 {
 	char	*dst;
 
-	if (x < 0 || y < 0)
-		prt("Neg. value, x: %i, y: %i\n", x, y);
-	if (x < 0)
-		x = 0;
-	if (y < 0)
-		y = 0;
-	dst = image->addr 
-		+ (y * image->line_length + x * (image->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
+	if (x >= 0 && y >= 0 && x < image->width && y < image->height)
+	{
+		dst = image->addr 
+			+ (y * image->line_length + x * (image->bits_per_pixel / 8));
+		*(unsigned int *)dst = color;
+	}
+	else
+		prt("Illegal value x: %i, y: %i\n", x, y);
 }
 
-void	put_line(t_data *image, int x1, int y1, int x2, int y2, int color)
+void	put_line(t_image *image, int x1, int y1, int x2, int y2, int color)
 {
 	int	i;
 	int	j;
@@ -58,7 +57,7 @@ int	argb(double a, int r, int g, int b)
 	return (r << 16 | g << 8 | b);
 }
 
-void	put_square(t_data *image, int x1, int y1, int x2, int y2, 
+void	put_square(t_image *image, int x1, int y1, int x2, int y2, 
 		int just_perimeter, int color)
 {
 	int	i;
@@ -81,7 +80,7 @@ void	put_square(t_data *image, int x1, int y1, int x2, int y2,
 	}
 }
 
-int	put_grad_line(t_data *image, int x1, int y1, int x2, int y2)
+int	put_grad_line(t_image *image, int x1, int y1, int x2, int y2)
 {
 	int	i;
 	int	j;
@@ -117,7 +116,7 @@ int	put_grad_line(t_data *image, int x1, int y1, int x2, int y2)
 	return (argb(0, r, g, b));
 }
 
-void	put_grad_square(t_data *image, int x1, int y1, int x2, int y2, 
+void	put_grad_square(t_image *image, int x1, int y1, int x2, int y2, 
 		int just_perimeter)
 {
 	int	i;
@@ -140,19 +139,8 @@ void	put_grad_square(t_data *image, int x1, int y1, int x2, int y2,
 	}
 }
 
-	// heh->x = x;
-	// heh->y = y;
-	// acessing the struct's variables is illegal and gives seg fault?
-int	mouse_click_hook(int x, int y, int keycode, t_vars *heh)
-{
-	prt("x: %i, y: %i, keycode: %i\n", x, y, keycode);
-	usleep(1000 * 10);
-	(void)heh;
-	return (0);
-}
-
 // by AI
-void	put_circle(t_data *image, int xc, int yc, int radius, 
+void	put_circle(t_image *image, int xc, int yc, int radius, 
 		int just_perimeter, int color)
 {
 	int	x;

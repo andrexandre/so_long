@@ -3,15 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   tool_lib.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/24 14:32:55 by analexan         ###   ########.fr       */
+/*   Updated: 2023/08/27 21:53:14 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 # include <unistd.h>
+
+void	wwrite(int q, const void *w, size_t e)
+{
+	ssize_t	compatibility_for_my_ubuntu;
+
+	compatibility_for_my_ubuntu = write(q, w, e);
+	(void)compatibility_for_my_ubuntu;
+}
 
 long	stol(char *str)
 {
@@ -41,31 +49,31 @@ void	pn(int num)
 {
 	if (num < 0)
 	{
-		write(1, "-", 1);
+		wwrite(1, "-", 1);
 		if (num == -2147483648)
 		{
-			write(1, "2", 1);
+			wwrite(1, "2", 1);
 			num = -147483648;
 		}
 		num = -num;
 	}
 	if (num > 9)
 		pn(num / 10);
-	write(1, &"0123456789"[num % 10], 1);
+	wwrite(1, &"0123456789"[num % 10], 1);
 }
 
 void	ps(char *str, int mode)
 {
 	if (!str)
 	{
-		write(1, "(null)", 6);
+		wwrite(1, "(null)", 6);
 		return ;
 	}
 	if (!mode)
 		while (*str)
-			write(1, str++, 1);
+			wwrite(1, str++, 1);
 	else
-		write(1, &str, 1);
+		wwrite(1, &str, 1);
 }
 
 void	prt(char *string, ...)
@@ -89,7 +97,7 @@ void	prt(char *string, ...)
 			i++;
 		}
 		else
-			write(1, &string[i++], 1);
+			wwrite(1, &string[i++], 1);
 	}
 	va_end(args);
 }
