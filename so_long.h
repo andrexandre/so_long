@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
+/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/29 17:53:07 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/13 18:47:13 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,12 @@ typedef struct s_game
 	int		win_height;
 	int		tile_width;
 	int		tile_height;
+	int		map_width;
+	int		map_height;
 	char	**map;
 	char	**temp;
 	int		collectibles;
+	int		exit;
 	char	*path;
 	int		r;
 	int		g;
@@ -68,6 +71,7 @@ typedef struct s_game
 }			t_game;
 
 // so_long
+
 
 // tool_lib
 long	stol(char *str);
@@ -79,7 +83,6 @@ int		ft_strlen(char *s, int mode);
 char	*get_next_line(int fd);
 
 // trash
-
 void	my_mlx_pixel_put(t_image *image, int x, int y, int color);
 void	put_line(t_image *image, int x1, int y1, int x2, int y2, int color);
 void	put_square(t_image *image, int x1, int y1, int x2, int y2, 
@@ -89,5 +92,10 @@ void	put_circle(t_image *image, int xc, int yc, int radius,
 			int just_perimeter, int color);
 void	p(int x, int y);
 void	put_grad_square(t_image *image, int x1, int y1, int x2, int y2, 
-		int just_perimeter);
+			int just_perimeter);
+void	rgbc_init(t_game *heh);
+int		rbgc(t_game *heh);
+void	fti_init(t_game *heh);
+int		fti(t_game *heh);
+
 #endif

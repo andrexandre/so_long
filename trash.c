@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   trash.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
+/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/26 17:07:58 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/28 11:37:02 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/13 18:47:34 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,3 +192,68 @@ void	put_circle(t_image *image, int xc, int yc, int radius,
 	}
 }
 
+void	rgbc_init(t_game *heh)
+{
+	heh->x = heh->win_width / 2;
+	heh->y = heh->win_height / 2;
+	heh->r = 255;
+	heh->b = 0;
+	heh->g = 0;
+	heh->p_image.img = mlx_new_image(heh->mlx, heh->win_width, heh->win_height);
+	heh->p_image.addr = mlx_get_data_addr(heh->p_image.img, 
+			&heh->p_image.bits_per_pixel, &heh->p_image.line_length, 
+			&heh->p_image.endian);
+	heh->p_image.width = heh->win_width;
+	heh->p_image.height = heh->win_height;
+}
+
+int	rbgc(t_game *heh)
+{
+	int	millisecond;
+
+	millisecond = 1000;
+	put_square(&heh->p_image, 0, 0, heh->win_width - 1, heh->win_height - 1, 0, 
+		argb(0, heh->r, heh->g, heh->b));
+	put_circle(&heh->p_image, heh->x, heh->y, 30, 0, 0);
+	mlx_put_image_to_window(heh->mlx, heh->win, heh->p_image.img, 0, 0);
+	if (heh->r == 255 && heh->g < 255 && heh->b == 0)
+		heh->g++;
+	else if (heh->g == 255 && heh->r > 0)
+		heh->r--;
+	else if (heh->g == 255 && heh->b < 255)
+		heh->b++;
+	else if (heh->b == 255 && heh->g > 0)
+		heh->g--;
+	else if (heh->b == 255 && heh->r < 255)
+		heh->r++;
+	else if (heh->r == 255 && heh->b > 0)
+		heh->b--;
+	usleep(millisecond * 10);
+	return (0);
+}
+
+void	fti_init(t_game *heh)
+{
+	heh->x = heh->win_width / 2;
+	heh->y = heh->win_height / 2;
+	heh->p_image.img = mlx_xpm_file_to_image(heh->mlx, "./xpm/tile.xpm", 
+			&heh->p_image.width, &heh->p_image.height);
+	mlx_put_image_to_window(heh->mlx, heh->win, heh->p_image.img, 
+		heh->x - 64, heh->y - 64);
+}
+
+int	fti(t_game *heh)
+{
+	int	millisecond;
+
+	millisecond = 1000;
+	mlx_put_image_to_window(heh->mlx, heh->win, heh->p_image.img, 
+		heh->x - 64, heh->y - 64);
+	usleep(millisecond * 10);
+	return (0);
+}
+
+void	p(int x, int y)
+{
+	prt("\nn1: %i, n2: %i\n", x, y);
+}
