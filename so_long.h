@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/13 18:47:13 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/14 15:43:22 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_image
 	int		endian;
 	int		width;
 	int		height;
+	int		is_created;
 }			t_image;
 
 typedef struct s_game
@@ -52,17 +53,22 @@ typedef struct s_game
 	void	*mlx;
 	void	*win;
 	t_image	p_image;
+	t_image	wall_i;
+	t_image	ground_i;
+	t_image	collec_i;
+	t_image	exit_i;
+	t_image	player_i;
 	int		win_width;
 	int		win_height;
-	int		tile_width;
-	int		tile_height;
+	int		temp;
 	int		map_width;
 	int		map_height;
 	char	**map;
-	char	**temp;
+	char	**temp_map;
 	int		collectibles;
 	int		exit;
 	char	*path;
+	int		moves;
 	int		r;
 	int		g;
 	int		b;

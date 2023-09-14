@@ -6,39 +6,203 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/13 19:15:30 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/14 19:02:09 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+void	free_map(int len, t_game *heh)
+{
+	int	i;
+
+	i = 0;
+	while (i < len)
+		free(heh->map[i++]);
+	// i = 0;
+	// while (i < len)
+	// 	free(heh->temp_map[i++]);
+	free(heh->map);
+}
+
 int	quit(t_game *heh)
 {
-	if (heh->p_image.img)
+	if (!heh->collectibles)
+		prt("You win!\n");
+	else
+		prt("Exited Sucessfully!\n");
+	if (!heh->p_image.is_created)
 		mlx_destroy_image(heh->mlx, heh->p_image.img);
+	if (!heh->wall_i.is_created)
+		mlx_destroy_image(heh->mlx, heh->wall_i.img);
+	if (!heh->ground_i.is_created)
+		mlx_destroy_image(heh->mlx, heh->ground_i.img);
+	if (!heh->collec_i.is_created)
+		mlx_destroy_image(heh->mlx, heh->collec_i.img);
+	if (!heh->exit_i.is_created)
+		mlx_destroy_image(heh->mlx, heh->exit_i.img);
+	if (!heh->player_i.is_created)
+		mlx_destroy_image(heh->mlx, heh->player_i.img);
 	if (heh)
 		mlx_destroy_window(heh->mlx, heh->win);
 	mlx_destroy_display(heh->mlx);
+	free_map(heh->map_height, heh);
 	free(heh->mlx);
 	exit(EXIT_SUCCESS);
 }
 
+void	create_image(int width, int height, int color, t_image *image, t_game *heh)
+{
+	image->width = width;
+	image->height = height;
+	image->img = mlx_new_image(heh->mlx, image->width, image->height);
+	image->addr = mlx_get_data_addr(image->img, 
+			&image->bits_per_pixel, &image->line_length, 
+			&image->endian);
+	put_square(image, 0, 0, image->width - 1, image->height - 1, 1, color);
+	image->is_created = 0;
+}
+
+void	pf(char **map, int len)
+{
+	int	i;
+
+	i = -1;
+	while (++i < len)
+		prt("%i:%s", i, map[i]);
+	prt("\n\n");
+}
+
+static int	ft_intlen(int num)
+{
+	int	intlen;
+
+	if (!num)
+		return (1);
+	if (num == -2147483648)
+		return (10);
+	intlen = 0;
+	if (num < 0)
+		intlen++;
+	while (num)
+	{
+		intlen++;
+		num /= 10;
+	}
+	return (intlen);
+}
+
+static void	ft_changestr(int n, int c, char *str, int mc)
+{
+	int temp = c;
+	if (n == 0)
+		str[0] = '0';
+	if (mc == -1)
+		str[0] = '-';
+	if (n == -2147483648)
+	{
+		c--;
+		n /= 10;
+		n = -n;
+		str[0] = '-';
+		str[c] = '8';
+	}
+	while (n > 0)
+	{
+		str[c-- - 1] = (n % 10) + '0';
+		n /= 10;
+	}
+	str[temp] = 0;
+}
+
+char	*ft_itoa(int n)
+{
+	int		mc;
+	int		c;
+	char	*str;
+
+	mc = 1;
+	c = 1;
+	if (n < 0)
+	{
+		mc = -1;
+		if (n != -2147483648)
+			n = -n;
+		c++;
+	}
+	c += ft_intlen(n);
+	str = malloc(c--);
+	if (!str)
+		return (NULL);
+	ft_changestr(n, c, str, mc);
+	prt("%s\n", str);
+	return (str);
+}
+
 int	key_hook(int keycode, t_game *heh)
 {
+	char	*str;
+	int		pixels;
+	int		t1;
+	int		t2;
+
+	pixels = 1;
+	t1 = heh->x;
+	t2 = heh->y;
+	heh->moves++;
 	if (keycode == ESC_KEY)
 		return (quit(heh));
 	if (keycode == UP_KEY || keycode == W_KEY)
-		heh->y -= 10;
+		heh->y -= pixels;
 	else if (keycode == LEFT_KEY || keycode == A_KEY)
-		heh->x -= 10;
+		heh->x -= pixels;
 	else if (keycode == RIGHT_KEY || keycode == D_KEY)
-		heh->x += 10;
+		heh->x += pixels;
 	else if (keycode == DOWN_KEY || keycode == S_KEY)
-		heh->y += 10;
-	if (keycode < 32 || keycode > 126)
-		prt("keycode: %i = NULL\n", keycode);
-	else
-		prt("keycode: %i = '%c'\n", keycode, keycode);
+		heh->y += pixels;
+	if (heh->map[heh->y][heh->x] == '1')
+	{
+		heh->x = t1;
+		heh->y = t2;
+	}
+	else if (heh->map[heh->y][heh->x] == 'C')
+	{
+		heh->map[heh->y][heh->x] = '0';
+		heh->collectibles--;
+	}
+	else if (heh->map[heh->y][heh->x] == 'E' && !heh->collectibles)
+		quit(heh);
+	// if (keycode < 32 || keycode > 126)
+	// 	prt("keycode: %i = NULL\n", keycode);
+	// else
+	// 	prt("keycode: %i = '%c'\n", keycode, keycode);
+	mlx_put_image_to_window(heh->mlx, heh->win, heh->p_image.img, 0, 0);
+	int y = 0, x = 0;
+	while (y < heh->win_height - heh->wall_i.height + 1)
+	{
+		while (x < heh->win_width - heh->wall_i.width + 1)
+		{
+			if (heh->map[y/heh->wall_i.height][x/heh->wall_i.width] == '1')
+				mlx_put_image_to_window(heh->mlx, heh->win, heh->wall_i.img, x, y);
+			else if (heh->map[y/heh->wall_i.height][x/heh->wall_i.width] == 'C')
+				mlx_put_image_to_window(heh->mlx, heh->win, heh->collec_i.img, x, y);
+			else if (heh->map[y/heh->wall_i.height][x/heh->wall_i.width] == 'E')
+				mlx_put_image_to_window(heh->mlx, heh->win, heh->exit_i.img, x, y);
+			else
+				mlx_put_image_to_window(heh->mlx, heh->win, heh->ground_i.img, x, y);
+			if (heh->x == x/heh->wall_i.width && heh->y == y/heh->wall_i.height)
+				mlx_put_image_to_window(heh->mlx, heh->win, heh->player_i.img, x, y);
+			mlx_string_put(heh->mlx, heh->win, x + 32, y + 32, 0x00FFFFFF, 
+				(char []){heh->map[y/heh->wall_i.height][x/heh->wall_i.width], '\0'});
+			x += heh->wall_i.width;
+		}
+		x = 0;
+		y += heh->wall_i.height;
+	}
+	str = ft_itoa(heh->moves);
+	mlx_string_put(heh->mlx, heh->win, heh->win_width / 2, heh->win_height - 5, 0x00FFFFFF, "Moves: ");
+	mlx_string_put(heh->mlx, heh->win, heh->win_width / 2 + 40, heh->win_height - 5, 0x00FFFFFF, str);
+	free(str);
 	return (0);
 }
 
@@ -122,39 +286,26 @@ void	error_handling(int error)
 	exit(0);
 }
 
-void	free_map(int len, t_game *heh)
-{
-	int	i;
-
-	i = 0;
-	while (i < len)
-		free(heh->map[i++]);
-	// i = 0;
-	// while (i < len)
-	// 	free(heh->temp[i++]);
-	free(heh->map);
-}
-
 void	copy_map_to_temp(t_game *heh)
 {
 	int	x;
 	int	y;
 
 	y = -1;
-	heh->temp = malloc(sizeof(heh->map) * (heh->map_height + 1));
-	if (!heh->temp)
+	heh->temp_map = malloc(sizeof(heh->map) * (heh->map_height + 1));
+	if (!heh->temp_map)
 		error_handling(-1);
-	heh->temp[heh->map_height] = NULL;
+	heh->temp_map[heh->map_height] = NULL;
 	while (++y < heh->map_height)
 	{
 		x = -1;
-		heh->temp[y] = malloc(heh->map_width + 2);
-		if (!heh->temp[y])
+		heh->temp_map[y] = malloc(heh->map_width + 2);
+		if (!heh->temp_map[y])
 			error_handling(-1);
-		heh->temp[y][heh->map_width + 1] = '\0';
+		heh->temp_map[y][heh->map_width + 1] = '\0';
 		while (++x < heh->map_width + 1)
 		{
-			heh->temp[y][x] = heh->map[y][x];
+			heh->temp_map[y][x] = heh->map[y][x];
 			if (heh->map[y][x] == 'P')
 			{
 				heh->x = x;
@@ -188,6 +339,7 @@ void	check_map(t_game *heh, int is_player)
 		free_map(heh->map_height, heh);
 		error_handling(4);
 	}
+	heh->temp = heh->collectibles;
 	heh->x = 0;
 	heh->y = 0;
 }
@@ -268,16 +420,6 @@ void  flood_fill(int x, int y, t_game *heh)
 	flood_fill(x, y - 1, heh);
 }
 
-void	pf(char **map, int len)
-{
-	int	i;
-
-	i = -1;
-	while (++i < len)
-		prt("%i:%s", i, map[i]);
-	prt("\n\n");
-}
-
 void	game_init(char *str, t_game *heh)
 {
 	char	*buffer;
@@ -291,27 +433,29 @@ void	game_init(char *str, t_game *heh)
 	copy_map_to_temp(heh);
 	flood_fill(heh->x, heh->y, heh);
 	free_map(heh->map_height, heh);
-	heh->map = heh->temp;
+	heh->map = heh->temp_map;
 	if (heh->collectibles != 0 || heh->exit != 0)
 	{
 		free_map(heh->map_height, heh);
 		error_handling(5);
 	}
-	// temp begin
+	heh->collectibles = heh->temp;
+	// calculate win_size
 	heh->mlx = mlx_init();
 	heh->win = mlx_new_window(heh->mlx, 1, 1, "So long n thank you for all the fish");
-	heh->p_image.img = mlx_xpm_file_to_image(heh->mlx, heh->path, &heh->p_image.width, &heh->p_image.height);
-	heh->win_width = heh->p_image.width * heh->map_width; // 64
-	heh->win_height = heh->p_image.height * heh->map_height;
-	mlx_destroy_image(heh->mlx, heh->p_image.img);
+	heh->wall_i.img = mlx_xpm_file_to_image(heh->mlx, heh->path, &heh->wall_i.width, &heh->wall_i.height);
+	heh->win_width = heh->wall_i.width * heh->map_width;
+	heh->win_height = heh->wall_i.height * heh->map_height;
+	// heh->wall_i.width must be 32
+	mlx_destroy_image(heh->mlx, heh->wall_i.img);
 	mlx_destroy_window(heh->mlx, heh->win);
 	mlx_destroy_display(heh->mlx);
 	free(heh->mlx);
-	// temp end
 }
 
 // to-do:
-// make game work (player is black and move stuff)
+// change from 64 to 32
+// make game work (make textures)
 int	main(void)
 {
 	static t_game	heh;
@@ -325,30 +469,26 @@ int	main(void)
 	// map_name = ".ber.ber"; // invalid map size (little)
 	// map_name = "maps/.ber"; // Invalid map (less walls)
 	// map_name = "maps/.ber.ber"; // empty file (invalid map size)
-	map_name = "asd/a/s/.ber.ber"; // everything right
+	// map_name = "asd/a/s/.ber.ber"; // everything right
+	map_name = "maps/test.ber"; // everything right
 	game_init(map_name, &heh);
 	// if (ac != 2 || !game_init(av[1], &heh))
-	// 	error_handling(-1);
+	// 	error_handling(0);
 	// int s = 900;
 	// heh.win_width = s;
 	// heh.win_height = s;
 	heh.mlx = mlx_init();
 	heh.win = mlx_new_window(heh.mlx, heh.win_width, heh.win_height, "So long n thank you for all the fish");
 
-	int y = 0, x = 0;
-	heh.p_image.img = mlx_xpm_file_to_image(heh.mlx, heh.path, &heh.p_image.width, &heh.p_image.height);
-	while (y < heh.win_height - heh.p_image.height + 1)
-	{
-		while (x < heh.win_width - heh.p_image.width + 1)
-		{
-			if (heh.x != x/heh.p_image.width || heh.y != y/heh.p_image.height)
-				mlx_put_image_to_window(heh.mlx, heh.win, heh.p_image.img, x, y);
-			x += heh.p_image.width;
-		}
-		x = 0;
-		y += heh.p_image.height;
-	}
-	free_map(heh.map_height, &heh);
+	create_image(heh.win_width, heh.win_height, 255, &heh.p_image, &heh);
+	create_image(64, 64, argb(0, 128, 64, 0), &heh.wall_i, &heh);
+	create_image(64, 64, argb(0, 0, 255, 0), &heh.ground_i, &heh);
+	create_image(64, 64, argb(0, 255, 255, 50), &heh.collec_i, &heh);
+	create_image(64, 64, argb(0, 255, 0, 0), &heh.exit_i, &heh);
+	create_image(64, 64, argb(0, 255, 255, 255), &heh.player_i, &heh);
+	// change 64 to 32
+	heh.moves = -1;
+	key_hook(0, &heh);
 	// rgbc_init(&heh);
 	// mlx_loop_hook(heh.mlx, rbgc, &heh);
 	// fti_init(&heh);
@@ -361,17 +501,9 @@ int	main(void)
 /* x Width Largura, y Length Comprimento and y Height Altura
 // fold all: Ctrl + K Ctrl + 1
 
-	// heh.p_image.img = mlx_new_image(heh.mlx, heh.win_width, heh.win_height);
-	// heh.p_image.addr = mlx_get_data_addr(heh.p_image.img, 
-	// 		&heh.p_image.bits_per_pixel, &heh.p_image.line_length, 
-	// 		&heh.p_image.endian);
-	// heh.p_image.width = heh.win_width;
-	// heh.p_image.height = heh.win_height;
-	// mlx_put_image_to_window(heh.mlx, heh.win, heh.p_image.img, 0, 0);
-	// mlx_destroy_image(heh.mlx, heh.p_image.img);
-
-	// put_grad_square(&heh.p_image, 5, 0, heh.win_width - 5, heh.win_height - 5, 0); heh.win_width = 1400;
+	// put_grad_square(&heh.p_image, 5, 0, heh.win_width - 5, heh.win_height - 5, 0);
 	// mlx_string_put(heh.mlx, heh.win, 100, 500, argb(0, 255, 255, 255), "Howdy people!");
+	// heh.wall_i.img = mlx_xpm_file_to_image(heh.mlx, heh.path, &heh.wall_i.width, &heh.wall_i.height);
 
 	exit(0);
 */
