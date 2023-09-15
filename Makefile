@@ -9,7 +9,7 @@ NAME        := so_long
 CC        := cc
 FLAGS    := -Wall -Wextra -Werror 
 # DONT RUN FSANITISE AND VALGRIND AT THE SAME TIME
-SRC        :=      so_long.c tool_lib.c get_next_line.c trash.c
+SRC        :=      so_long.c tool_lib.c get_next_line.c func_lib.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f

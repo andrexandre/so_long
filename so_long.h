@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/14 15:43:22 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/15 19:21:44 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,28 +52,27 @@ typedef struct s_game
 {
 	void	*mlx;
 	void	*win;
-	t_image	p_image;
+	t_image	image;
 	t_image	wall_i;
 	t_image	ground_i;
 	t_image	collec_i;
 	t_image	exit_i;
 	t_image	player_i;
+	t_image	danger_i;
 	int		win_width;
 	int		win_height;
-	int		temp;
 	int		map_width;
 	int		map_height;
+	int		tile_width;
+	int		tile_height;
 	char	**map;
 	char	**temp_map;
+	int		temp;
 	int		collectibles;
-	int		exit;
-	char	*path;
+	int		exit_count;
 	int		moves;
-	int		r;
-	int		g;
-	int		b;
-	int		x;
-	int		y;
+	int		x_pl;
+	int		y_pl;
 }			t_game;
 
 // so_long
@@ -88,20 +87,8 @@ void	prt(char *string, ...);
 int		ft_strlen(char *s, int mode);
 char	*get_next_line(int fd);
 
-// trash
-void	my_mlx_pixel_put(t_image *image, int x, int y, int color);
-void	put_line(t_image *image, int x1, int y1, int x2, int y2, int color);
-void	put_square(t_image *image, int x1, int y1, int x2, int y2, 
-			int just_perimeter, int color);
+// func_lib
 int		argb(double a, int r, int g, int b);
-void	put_circle(t_image *image, int xc, int yc, int radius, 
-			int just_perimeter, int color);
 void	p(int x, int y);
-void	put_grad_square(t_image *image, int x1, int y1, int x2, int y2, 
-			int just_perimeter);
-void	rgbc_init(t_game *heh);
-int		rbgc(t_game *heh);
-void	fti_init(t_game *heh);
-int		fti(t_game *heh);
 
 #endif
