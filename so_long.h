@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/15 19:21:44 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/19 19:29:40 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,6 @@
 # define RIGHT_KEY 65363
 # define ESC_KEY 65307
 
-// # define TILE_WIDTH 56
-// # define TILE_HEIGHT 60
-
 typedef struct s_image
 {
 	void	*img;
@@ -52,13 +49,23 @@ typedef struct s_game
 {
 	void	*mlx;
 	void	*win;
-	t_image	image;
 	t_image	wall_i;
 	t_image	ground_i;
 	t_image	collec_i;
 	t_image	exit_i;
-	t_image	player_i;
 	t_image	danger_i;
+	t_image	player_i;
+	t_image	up_i;
+	t_image	left_i;
+	t_image	right_i;
+	t_image	aplayer_i;
+	t_image	aup_i;
+	t_image	aleft_i;
+	t_image	aright_i;
+	t_image	aaplayer_i;
+	t_image	aaup_i;
+	t_image	aaleft_i;
+	t_image	aaright_i;
 	int		win_width;
 	int		win_height;
 	int		map_width;
@@ -67,7 +74,11 @@ typedef struct s_game
 	int		tile_height;
 	char	**map;
 	char	**temp_map;
+	int		curr_animation;
+	int		is_pressed;
+	int		keycode;
 	int		temp;
+	int		start;
 	int		collectibles;
 	int		exit_count;
 	int		moves;
@@ -75,8 +86,36 @@ typedef struct s_game
 	int		y_pl;
 }			t_game;
 
-// so_long
+typedef struct s_food
+{
+	t_image food01;
+	t_image food02;
+}			t_food;
 
+// so_long
+void	p(int x, int y);
+void	error_handling(int error);
+
+// check_map
+char	*check_map_name_and_length(char *str, int fd, t_game *heh);
+void	check_map_walls_and_create_array(char *str, int fd, t_game *heh);
+void	check_if_valid_map(t_game *heh, int is_player);
+void	copy_map_to_temp(t_game *heh);
+void	flood_fill(int x, int y, t_game *heh);
+
+// game_ctrl
+int		quit(t_game *heh);
+void	free_map(int len, t_game *heh);
+void	exec_interactions(int t1, int t2, t_game *heh);
+void	error_handling(int error);
+
+// func_lib
+char	*ft_itoa(int n);
+int		ft_strspn(const char *str, const char *accept);
+int		ft_strcmp(char *s1, char *s2);
+
+// func_lib2
+int rng(int min, int max);
 
 // tool_lib
 long	stol(char *str);
@@ -86,9 +125,5 @@ void	prt(char *string, ...);
 // get_next_line
 int		ft_strlen(char *s, int mode);
 char	*get_next_line(int fd);
-
-// func_lib
-int		argb(double a, int r, int g, int b);
-void	p(int x, int y);
 
 #endif

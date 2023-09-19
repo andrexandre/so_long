@@ -7,9 +7,9 @@ CYAN 		:= \033[1;36m
 
 NAME        := so_long
 CC        := cc
-FLAGS    := -Wall -Wextra -Werror 
-# DONT RUN FSANITISE AND VALGRIND AT THE SAME TIME
-SRC        :=      so_long.c tool_lib.c get_next_line.c func_lib.c
+FLAGS    := -Wall -Wextra -Werror
+# don't run fsanitise and valgrind at the same time
+SRC        :=      so_long.c tool_lib.c get_next_line.c func_lib.c func_lib2.c check_map.c game_ctrl.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f

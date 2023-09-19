@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   tool_lib.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
+/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/08/27 21:53:14 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/16 12:21:36 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-# include <unistd.h>
 
 void	wwrite(int q, const void *w, size_t e)
 {
