@@ -6,74 +6,35 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 19:20:32 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/16 12:24:32 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:39:59 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-static int	ft_intlen(int num)
+int	ft_abs(int x)
 {
-	int	intlen;
-
-	if (!num)
-		return (1);
-	if (num == -2147483648)
-		return (10);
-	intlen = 0;
-	if (num < 0)
-		intlen++;
-	while (num)
-	{
-		intlen++;
-		num /= 10;
-	}
-	return (intlen);
+	if (x < 0)
+		return (-x);
+	return (x);
 }
 
-static void	ft_changestr(int n, int c, char *str, int mc)
+// error_handling(-1); = Failed to open/read /dev/urandom
+int	rng(int min, int max)
 {
-	str[c] = 0;
-	if (n == 0)
-		str[0] = '0';
-	if (mc == -1)
-		str[0] = '-';
-	if (n == -2147483648)
-	{
-		c--;
-		n /= 10;
-		n = -n;
-		str[0] = '-';
-		str[c] = '8';
-	}
-	while (n > 0)
-	{
-		str[c-- - 1] = (n % 10) + '0';
-		n /= 10;
-	}
-}
+	int		random_data;
+	int		urandom_fd;
+	ssize_t	bytes_read;
 
-char	*ft_itoa(int n)
-{
-	int		mc;
-	int		c;
-	char	*str;
-
-	mc = 1;
-	c = 1;
-	if (n < 0)
-	{
-		mc = -1;
-		if (n != -2147483648)
-			n = -n;
-		c++;
-	}
-	c += ft_intlen(n);
-	str = malloc(c--);
-	if (!str)
-		return (NULL);
-	ft_changestr(n, c, str, mc);
-	return (str);
+	random_data = 0;
+	urandom_fd = open("/dev/urandom", O_RDONLY);
+	if (urandom_fd < 0)
+		error_handling(-1);
+	bytes_read = read(urandom_fd, &random_data, sizeof(random_data));
+	if (bytes_read < 0)
+		error_handling(-1);
+	close(urandom_fd);
+	return ((ft_abs(random_data) % (max - min + 1)) + min);
 }
 
 // returns the length of str that has only char in accept
@@ -105,4 +66,12 @@ int	ft_strcmp(char *s1, char *s2)
 	while (s1[i] && s1[i] == s2[i])
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+void	wwrite(int q, const void *w, size_t e)
+{
+	ssize_t	compatibility_for_my_ubuntu;
+
+	compatibility_for_my_ubuntu = write(q, w, e);
+	(void)compatibility_for_my_ubuntu;
 }

@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/19 19:29:40 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/20 19:46:42 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,12 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <stdio.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 100
 # endif
 
-# define W_KEY 119
-# define A_KEY 97
-# define S_KEY 115
-# define D_KEY 100
 # define UP_KEY 65362
 # define LEFT_KEY 65361
 # define DOWN_KEY 65364
@@ -45,27 +42,32 @@ typedef struct s_image
 	int		is_created;
 }			t_image;
 
+typedef struct s_imgs
+{
+	t_image	wall;
+	t_image	ground;
+	t_image	collec;
+	t_image	exit;
+	t_image	danger;
+	t_image	down;
+	t_image	up;
+	t_image	left;
+	t_image	right;
+	t_image	adown;
+	t_image	aup;
+	t_image	aleft;
+	t_image	aright;
+	t_image	aadown;
+	t_image	aaup;
+	t_image	aaleft;
+	t_image	aaright;
+}			t_imgs;
+
 typedef struct s_game
 {
 	void	*mlx;
 	void	*win;
-	t_image	wall_i;
-	t_image	ground_i;
-	t_image	collec_i;
-	t_image	exit_i;
-	t_image	danger_i;
-	t_image	player_i;
-	t_image	up_i;
-	t_image	left_i;
-	t_image	right_i;
-	t_image	aplayer_i;
-	t_image	aup_i;
-	t_image	aleft_i;
-	t_image	aright_i;
-	t_image	aaplayer_i;
-	t_image	aaup_i;
-	t_image	aaleft_i;
-	t_image	aaright_i;
+	t_imgs	i;
 	int		win_width;
 	int		win_height;
 	int		map_width;
@@ -75,47 +77,49 @@ typedef struct s_game
 	char	**map;
 	char	**temp_map;
 	int		curr_animation;
-	int		is_pressed;
 	int		keycode;
-	int		temp;
-	int		start;
+	int		current_frame;
+	int		frame_of_release;
 	int		collectibles;
+	int		total_collectibles;
 	int		exit_count;
+	char	exit_filename[25];
 	int		moves;
 	int		x_pl;
 	int		y_pl;
 }			t_game;
 
-typedef struct s_food
-{
-	t_image food01;
-	t_image food02;
-}			t_food;
-
-// so_long
-void	p(int x, int y);
-void	error_handling(int error);
-
 // check_map
-char	*check_map_name_and_length(char *str, int fd, t_game *heh);
-void	check_map_walls_and_create_array(char *str, int fd, t_game *heh);
-void	check_if_valid_map(t_game *heh, int is_player);
-void	copy_map_to_temp(t_game *heh);
-void	flood_fill(int x, int y, t_game *heh);
+char	*check_map_name_and_length(char *str, int fd, t_game *game);
+void	check_map_walls_and_create_array(char *str, int fd, t_game *game);
+void	check_if_valid_map(t_game *game, int is_player);
+void	copy_map_to_temp(t_game *game);
+void	flood_fill(int x, int y, t_game *game);
 
-// game_ctrl
-int		quit(t_game *heh);
-void	free_map(int len, t_game *heh);
-void	exec_interactions(int t1, int t2, t_game *heh);
+// draw_map
+void	draw_player_animation(int keycode, int x, int y, t_game *game);
+void	draw_player(int keycode, int mode, t_game *game);
+void	draw_food_or_exit(int x, int y, t_game *game);
+void	draw_map(char **map, t_game *game);
+void	update_map(int x, int y, t_game *game);
+
+// game_func
+int		check_map(char *str, t_game *game);
+int		restart(t_game *game);
+void	exec_interactions(int t1, int t2, t_game *game);
+void	create_image(char *path, t_image *image, t_game *game);
+void	image_to_window(t_image image, int x, int y, t_game *game);
+
+// quit_game
 void	error_handling(int error);
+int		quit(t_game *game);
+void	free_map(int len, t_game *game);
 
 // func_lib
-char	*ft_itoa(int n);
+int		rng(int min, int max);
 int		ft_strspn(const char *str, const char *accept);
 int		ft_strcmp(char *s1, char *s2);
-
-// func_lib2
-int rng(int min, int max);
+void	wwrite(int q, const void *w, size_t e);
 
 // tool_lib
 long	stol(char *str);

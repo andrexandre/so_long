@@ -6,19 +6,11 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/16 12:21:36 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/20 17:39:49 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-void	wwrite(int q, const void *w, size_t e)
-{
-	ssize_t	compatibility_for_my_ubuntu;
-
-	compatibility_for_my_ubuntu = write(q, w, e);
-	(void)compatibility_for_my_ubuntu;
-}
 
 long	stol(char *str)
 {
