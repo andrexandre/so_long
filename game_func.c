@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game_ctrl.c                                        :+:      :+:    :+:   */
+/*   game_func.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 17:36:08 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/20 19:44:46 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/21 14:21:12 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	check_map(char *str, t_game *game)
 {
 	game->map_height = 0;
-	if ((!check_map_name_and_length(str, 0, game) && !game->map_height) || 
-		(game->map_height < 3 || game->map_width < 3))
+	if ((!check_map_name_and_length(str, 0, game) && !game->map_height)
+		|| (game->map_height < 3 || game->map_width < 3))
 		error_handling(3);
 	check_map_walls_and_create_array(str, 0, game);
 	check_if_valid_map(game, 0);
@@ -45,7 +45,7 @@ int	restart(t_game *game)
 	copy_map_to_temp(game);
 	mlx_destroy_image(game->mlx, game->i.exit.img);
 	game->exit_count = rng(143, 146);
-	snprintf(game->exit_filename, 25, 
+	snprintf(game->exit_filename, 25,
 		"./xpm/tile/tile%d.xpm", game->exit_count);
 	create_image(game->exit_filename, &game->i.exit, game);
 	draw_map(game->map, game);
@@ -70,23 +70,23 @@ void	exec_interactions(int t1, int t2, t_game *game)
 		if (!game->collectibles)
 		{
 			game->exit_count -= 8;
-			snprintf(game->exit_filename, 25, 
+			snprintf(game->exit_filename, 25,
 				"./xpm/tile/tile%d.xpm", game->exit_count);
 			mlx_destroy_image(game->mlx, game->i.exit.img);
-			game->i.exit.img = mlx_xpm_file_to_image(game->mlx, 
-					game->exit_filename, &game->i.exit.width, 
+			game->i.exit.img = mlx_xpm_file_to_image(game->mlx,
+					game->exit_filename, &game->i.exit.width,
 					&game->i.exit.height);
 			draw_food_or_exit(-1, -1, game);
 		}
 	}
-	else if (game->map[game->y_pl][game->x_pl] == 'D' || 
+	else if (game->map[game->y_pl][game->x_pl] == 'D' ||
 			(game->map[game->y_pl][game->x_pl] == 'E' && !game->collectibles))
 		quit(game);
 }
 
 void	create_image(char *path, t_image *image, t_game *game)
 {
-	image->img = mlx_xpm_file_to_image(game->mlx, 
+	image->img = mlx_xpm_file_to_image(game->mlx,
 			path, &image->width, &image->height);
 }
 
@@ -94,4 +94,3 @@ void	image_to_window(t_image image, int x, int y, t_game *game)
 {
 	mlx_put_image_to_window(game->mlx, game->win, image.img, x, y);
 }
-

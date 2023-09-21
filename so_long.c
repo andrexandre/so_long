@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/20 20:11:04 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/21 14:19:16 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void	game_init(t_game *game)
 {
 	game->mlx = mlx_init();
-	game->win = mlx_new_window(game->mlx, game->win_width, game->win_height, 
+	game->win = mlx_new_window(game->mlx, game->win_width, game->win_height,
 			"So long");
 	create_image("./xpm/tile/tile001.xpm", &game->i.wall, game);
 	create_image("./xpm/floor/floor227.xpm", &game->i.ground, game);
 	game->exit_count = rng(143, 146);
-	snprintf(game->exit_filename, 25, "./xpm/tile/tile%d.xpm", 
+	snprintf(game->exit_filename, 25, "./xpm/tile/tile%d.xpm",
 		game->exit_count);
 	create_image(game->exit_filename, &game->i.exit, game);
 	create_image("./xpm/tile/tile016.xpm", &game->i.danger, game);

@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:06:56 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/20 19:38:11 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/21 14:22:05 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ void	check_map_walls_and_create_array(char *str, int fd, t_game *game)
 		game->map[i] = get_next_line(fd);
 		if (!game->map[i])
 			break ;
-		if (((!i || i == game->map_height - 1) && 
-				(game->map_width != ft_strspn(game->map[i], "1")))
+		if (((!i || i == game->map_height - 1)
+				&& (game->map_width != ft_strspn(game->map[i], "1")))
 			|| game->map_width != ft_strspn(game->map[i], "01CEPD"))
 		{
 			free_map(i + 1, game);
@@ -103,8 +103,8 @@ char	*check_map_name_and_length(char *str, int fd, t_game *game)
 {
 	char	*buffer;
 
-	if (ft_strlen(str, 0) < 4 || 
-		ft_strcmp(str + (ft_strlen(str, 0) - 4), ".ber"))
+	if (ft_strlen(str, 0) < 4
+		|| ft_strcmp(str + (ft_strlen(str, 0) - 4), ".ber"))
 		error_handling(1);
 	fd = open(str, O_RDONLY);
 	if (fd < 0)
@@ -116,7 +116,7 @@ char	*check_map_name_and_length(char *str, int fd, t_game *game)
 			break ;
 		if (!(game->map_height)++)
 			game->map_width = ft_strlen(buffer, 1);
-		if (ft_strlen(buffer, 1) != game->map_width || *buffer != '1' 
+		if (ft_strlen(buffer, 1) != game->map_width || *buffer != '1'
 			|| buffer[ft_strlen(buffer, 1) - 1] != '1')
 		{
 			free(buffer);
@@ -130,10 +130,10 @@ char	*check_map_name_and_length(char *str, int fd, t_game *game)
 
 void	flood_fill(int x, int y, t_game *game)
 {
-	if (x >= game->map_width || x < 0 
-		|| y >= game->map_height || y < 0 
-		|| game->map[y][x] == '1' 
-		|| game->map[y][x] == 'D' 
+	if (x >= game->map_width || x < 0
+		|| y >= game->map_height || y < 0
+		|| game->map[y][x] == '1'
+		|| game->map[y][x] == 'D'
 		|| game->map[y][x] == 'F')
 		return ;
 	if (game->map[y][x] == 'C')

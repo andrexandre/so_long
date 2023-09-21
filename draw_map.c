@@ -6,7 +6,7 @@
 /*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:06:56 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/20 19:38:11 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/21 14:22:49 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,14 +76,14 @@ void	draw_food_or_exit(int x, int y, t_game *game)
 			x = -1;
 			while (++x < game->map_width)
 				if (game->map[y][x] == 'E')
-					mlx_put_image_to_window(game->mlx, game->win, 
-						game->i.exit.img, 
+					mlx_put_image_to_window(game->mlx, game->win,
+						game->i.exit.img,
 						x * game->tile_width, y * game->tile_height);
 		}
 	}
 	else
 	{
-		snprintf(filename, sizeof(filename), "./xpm/food/food%d.xpm", 
+		snprintf(filename, sizeof(filename), "./xpm/food/food%d.xpm",
 			rng(1, 64));
 		create_image(filename, &game->i.collec, game);
 		image_to_window(game->i.collec, x, y, game);
@@ -126,13 +126,13 @@ void	update_map(int x, int y, t_game *game)
 
 	image_to_window(game->i.wall, 0, 0, game);
 	if (game->map[y][x] == 'E')
-		image_to_window(game->i.exit, 
+		image_to_window(game->i.exit,
 			x * game->tile_width, y * game->tile_height, game);
 	else if (game->map[y][x] == 'D')
-		image_to_window(game->i.danger, 
+		image_to_window(game->i.danger,
 			x * game->tile_width, y * game->tile_height, game);
 	else
-		image_to_window(game->i.ground, 
+		image_to_window(game->i.ground,
 			x * game->tile_width, y * game->tile_height, game);
 	draw_player(game->keycode, 0, game);
 	snprintf(str, sizeof(str), "%d", ++game->moves);
