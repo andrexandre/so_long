@@ -3,16 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   quit_game.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
+/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:25:58 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/20 20:12:41 by analexan         ###   ########.fr       */
+/*   Updated: 2023/09/23 17:59:26 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void	error_handling(int error)
+// resfreshes the map and resets the variables that will be used again
+int	restart(t_game *game)
+{
+	free_map(game->map_height, game);
+	game->map = game->temp_map;
+	copy_map_to_temp(game);
+	mlx_destroy_image(game->mlx, game->i.exit.img);
+	game->exit_count = rng(143, 146);
+	snprintf(game->exit_filename, 50,
+		"./textures/xpm/tile/tile%d.xpm", game->exit_count);
+	create_image(game->exit_filename, &game->i.exit, game);
+	mlx_destroy_image(game->mlx, game->i.ground.img);
+	draw_map(game->map, game);
+	create_image("./textures/xpm/floor/floor227.xpm", &game->i.ground, game);
+	game->curr_collec = game->total_collectibles;
+	game->moves = 0;
+	game->current_frame = 0;
+	return (0);
+}
+
+void	print_error(int error)
 {
 	prt("\033[1;31mError\n");
 	if (!error)
@@ -45,21 +65,22 @@ void	destroy_images(t_game *game)
 	mlx_destroy_image(game->mlx, game->i.up.img);
 	mlx_destroy_image(game->mlx, game->i.left.img);
 	mlx_destroy_image(game->mlx, game->i.right.img);
-	mlx_destroy_image(game->mlx, game->i.adown.img);
-	mlx_destroy_image(game->mlx, game->i.aup.img);
-	mlx_destroy_image(game->mlx, game->i.aleft.img);
-	mlx_destroy_image(game->mlx, game->i.aright.img);
-	mlx_destroy_image(game->mlx, game->i.aadown.img);
-	mlx_destroy_image(game->mlx, game->i.aaup.img);
-	mlx_destroy_image(game->mlx, game->i.aaleft.img);
-	mlx_destroy_image(game->mlx, game->i.aaright.img);
+	mlx_destroy_image(game->mlx, game->i.down_r.img);
+	mlx_destroy_image(game->mlx, game->i.up_r.img);
+	mlx_destroy_image(game->mlx, game->i.left_r.img);
+	mlx_destroy_image(game->mlx, game->i.right_r.img);
+	mlx_destroy_image(game->mlx, game->i.down_l.img);
+	mlx_destroy_image(game->mlx, game->i.up_l.img);
+	mlx_destroy_image(game->mlx, game->i.left_l.img);
+	mlx_destroy_image(game->mlx, game->i.right_l.img);
 }
 
+// based on last tile before quitting prints a message and frees everything
 int	quit(t_game *game)
 {
 	if (game->map[game->y_pl][game->x_pl] == 'D')
 		prt("\033[1;31mYou lose!\033[0m\n");
-	else if (game->map[game->y_pl][game->x_pl] == 'E' && !game->collectibles)
+	else if (game->map[game->y_pl][game->x_pl] == 'E' && !game->curr_collec)
 		prt("\033[1;32mYou win!\033[0m\n");
 	else
 		prt("\033[1;34mProgram closed!\033[0m\n");

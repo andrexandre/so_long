@@ -9,7 +9,7 @@ NAME        := so_long
 CC        := cc
 FLAGS    := -Wall -Wextra -Werror
 # don't run fsanitise and valgrind at the same time
-SRC        :=      so_long.c tool_lib.c get_next_line.c func_lib.c check_map.c draw_map.c game_func.c quit_game.c
+SRC        :=      so_long.c game_init.c check_map.c draw_map.c game_func.c quit_game.c tool_lib.c get_next_line.c
 OBJ        := $(SRC:.c=.o)
 
 RM		    := rm -f
@@ -20,7 +20,7 @@ $(NAME): $(OBJ)
 	@make mlx
 	@$(CC) $(OBJ) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME)
 	@mv *.o objs
-	@ echo "$(GREEN)\nStuff compiled 🛠️\n$(END)"
+	@echo "$(GREEN)\nStuff compiled 🛠️\n$(END)"
 
 %.o: %.c
 	@mkdir -p objs
@@ -34,10 +34,10 @@ clean:
 			@ echo "\nStuff removed 🗑️\n"
 
 fclean:		clean
-			@ ${RM} ${NAME}
-			@ $(MAKE) -C mlx_linux clean
-			@ rm -rf objs
-			@ echo "$(GREEN)\nAll stuff removed 🗑️\n$(END)"
+			@${RM} ${NAME}
+			@$(MAKE) -C mlx_linux clean
+			@rm -rf objs
+			@echo "$(GREEN)\nAll stuff removed 🗑️\n$(END)"
 
 re:			fclean all
 
