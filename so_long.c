@@ -6,7 +6,7 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 18:23:58 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/23 19:50:41 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	key_release(int keycode, t_game *game)
 int	loop(t_game *game)
 {
 	game->current_frame++;
-	if (game->current_frame - game->frame_of_release > 10000)
+	if (game->current_frame - game->frame_of_release > 20000)
 		draw_player(game->keycode, 0, game);
 	return (0);
 }
@@ -96,8 +96,6 @@ int	main(int ac, char **av)
 {
 	static t_game	game;
 
-	ac = 2;
-	av[1] = "maps/test.ber";
 	if (!check_map(av[1], &game) && ac != 2)
 		print_error(0);
 	game_init(&game);
