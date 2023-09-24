@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   so_long.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
+/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 19:50:41 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/24 17:22:24 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	main(int ac, char **av)
 {
 	static t_game	game;
 
-	if (!check_map(av[1], &game) && ac != 2)
+	if (ac != 2 || !check_map(av[1], &game))
 		print_error(0);
 	game_init(&game);
 	mlx_hook(game.win, 2, 1L << 0, key_press, &game);
