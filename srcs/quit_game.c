@@ -6,11 +6,11 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:25:58 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 17:59:26 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:26 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 // resfreshes the map and resets the variables that will be used again
 int	restart(t_game *game)
@@ -19,7 +19,7 @@ int	restart(t_game *game)
 	game->map = game->temp_map;
 	copy_map_to_temp(game);
 	mlx_destroy_image(game->mlx, game->i.exit.img);
-	game->exit_count = rng(143, 146);
+	game->exit_count = 143 + rand() % 4;
 	snprintf(game->exit_filename, 50,
 		"./textures/xpm/tile/tile%d.xpm", game->exit_count);
 	create_image(game->exit_filename, &game->i.exit, game);
@@ -59,6 +59,7 @@ void	destroy_images(t_game *game)
 {
 	mlx_destroy_image(game->mlx, game->i.wall.img);
 	mlx_destroy_image(game->mlx, game->i.ground.img);
+	mlx_destroy_image(game->mlx, game->i.collec.img);
 	mlx_destroy_image(game->mlx, game->i.exit.img);
 	mlx_destroy_image(game->mlx, game->i.danger.img);
 	mlx_destroy_image(game->mlx, game->i.down.img);

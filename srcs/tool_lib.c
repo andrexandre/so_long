@@ -6,11 +6,11 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/30 17:16:37 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 17:10:06 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:25 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 void	pn(int num)
 {

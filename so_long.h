@@ -6,7 +6,7 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/17 15:42:27 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 17:55:07 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/27 04:13:43 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <time.h>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 100
@@ -29,6 +30,9 @@
 # define DOWN_KEY 65364
 # define RIGHT_KEY 65363
 # define ESC_KEY 65307
+# define SHIFT 65506
+# define ONE_NP 65436
+# define ZERO_NP 65438
 
 typedef struct s_image
 {
@@ -86,10 +90,20 @@ typedef struct s_game
 	int		moves;
 	int		x_pl;
 	int		y_pl;
-}			t_game;
+	int		animation_delay;
 
-// game_init
-void	game_init(t_game *game);
+	int		last_x;
+	int		last_y;
+	char	last_map_char;
+	char	selected_char;
+	int		editor_on;
+	t_image	*selected_image;
+	int		last_keycode;
+	int		tile_called;
+	int		mouse_clicking;
+	char	*current_map;
+}			t_game;
+	// for the editor
 
 // check_map
 char	*check_map_name_and_length(char *str, int fd, t_game *game);
@@ -102,11 +116,12 @@ void	flood_fill(int x, int y, t_game *game);
 void	draw_player(int keycode, int walking, t_game *game);
 void	draw_food_or_exit(int x, int y, t_game *game);
 void	draw_map(char **map, t_game *game);
+void	draw_ground(int x, int y, t_game *game);
 
 // game_func
+void	game_init(t_game *game);
 void	exec_interactions(int t1, int t2, t_game *game);
 void	update_map(int x, int y, t_game *game);
-int		rng(int min, int max);
 void	create_image(char *path, t_image *image, t_game *game);
 void	image_to_window(t_image image, int x, int y, t_game *game);
 
@@ -124,5 +139,16 @@ int		ft_strcmp(char *s1, char *s2);
 // get_next_line
 int		ft_strlen(char *s, int mode);
 char	*get_next_line(int fd);
+
+//editor
+int		editor(int keycode, t_game *game);
+void	save_map(int fd, t_game *game);
+void	new_map(int map_width, int map_height, t_game *game);
+
+// mouse
+int		mouse_press(int button, int m_x, int m_y, t_game *game);
+int		mouse_release(int button, int m_x, int m_y, t_game *game);
+int		mouse_move(int m_x, int m_y, t_game *game);
+void	change_tile(char map_char, t_game *game);
 
 #endif

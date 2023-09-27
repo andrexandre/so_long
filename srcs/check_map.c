@@ -6,11 +6,11 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:06:56 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 18:24:14 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:26 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 // check if the file ends in .ber, map is rectangular
 // and first and last line of the file is only '1'
@@ -70,8 +70,6 @@ void	check_map_walls_and_create_array(char *str, int fd, t_game *game)
 		i++;
 	}
 	close(fd);
-	game->curr_collec = 0;
-	game->exit_count = 0;
 }
 
 // check if player/exit are 1 or if there's collectibles
@@ -100,8 +98,6 @@ void	check_if_valid_map(t_game *game, int is_player)
 		print_error(5);
 	}
 	game->total_collectibles = game->curr_collec;
-	game->x_pl = 0;
-	game->y_pl = 0;
 }
 
 void	copy_map_to_temp(t_game *game)

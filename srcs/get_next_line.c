@@ -6,11 +6,11 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/20 14:44:07 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 16:03:34 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:26 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 int	ft_strlen(char *s, int mode)
 {

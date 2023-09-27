@@ -6,11 +6,11 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/16 12:06:56 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 17:39:45 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:25 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
 
 void	draw_player_animation(int keycode, int x, int y, t_game *game)
 {
@@ -83,11 +83,11 @@ void	draw_food_or_exit(int x, int y, t_game *game)
 	}
 	else
 	{
+		mlx_destroy_image(game->mlx, game->i.collec.img);
 		snprintf(filename, sizeof(filename),
-			"./textures/xpm/food/food%d.xpm", rng(1, 64));
+			"./textures/xpm/food/food%d.xpm", 1 + rand() % 64);
 		create_image(filename, &game->i.collec, game);
 		image_to_window(game->i.collec, x, y, game);
-		mlx_destroy_image(game->mlx, game->i.collec.img);
 	}
 }
 
@@ -95,9 +95,9 @@ void	draw_ground(int x, int y, t_game *game)
 {
 	char	filename[50];
 
-	if (rng(0, 2))
+	if (rand() % 3)
 		snprintf(filename, sizeof(filename),
-			"./textures/xpm/floor/floor%d.xpm", rng(227, 231));
+			"./textures/xpm/floor/floor%d.xpm", 227 + rand() % 5);
 	else
 		snprintf(filename, sizeof(filename),
 			"./textures/xpm/floor/floor227.xpm");

@@ -6,11 +6,41 @@
 /*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 17:36:08 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/23 17:55:07 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/09/26 22:02:26 by andrealex        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "../so_long.h"
+
+// initiate the mlx, window, images and map
+void	game_init(t_game *game)
+{
+	game->mlx = mlx_init();
+	game->win = mlx_new_window(game->mlx, game->win_width, game->win_height,
+			"So long");
+	create_image("./textures/xpm/tile/tile001.xpm", &game->i.wall, game);
+	game->exit_count = 143 + rand() % 4;
+	snprintf(game->exit_filename, 50, "./textures/xpm/tile/tile%d.xpm",
+		game->exit_count);
+	create_image(game->exit_filename, &game->i.exit, game);
+	create_image("./textures/xpm/tile/tile016.xpm", &game->i.danger, game);
+	create_image("./textures/xpm/walk/walk01.xpm", &game->i.down, game);
+	create_image("./textures/xpm/walk/walk02.xpm", &game->i.up, game);
+	create_image("./textures/xpm/walk/walk03.xpm", &game->i.left, game);
+	create_image("./textures/xpm/walk/walk04.xpm", &game->i.right, game);
+	create_image("./textures/xpm/walk/walk05.xpm", &game->i.down_r, game);
+	create_image("./textures/xpm/walk/walk06.xpm", &game->i.up_r, game);
+	create_image("./textures/xpm/walk/walk07.xpm", &game->i.left_r, game);
+	create_image("./textures/xpm/walk/walk08.xpm", &game->i.right_r, game);
+	create_image("./textures/xpm/walk/walk09.xpm", &game->i.down_l, game);
+	create_image("./textures/xpm/walk/walk10.xpm", &game->i.up_l, game);
+	create_image("./textures/xpm/walk/walk11.xpm", &game->i.left_l, game);
+	create_image("./textures/xpm/walk/walk12.xpm", &game->i.right_l, game);
+	create_image("./textures/xpm/food/food1.xpm", &game->i.collec, game);
+	draw_map(game->map, game);
+	create_image("./textures/xpm/floor/floor227.xpm", &game->i.ground, game);
+	mlx_do_key_autorepeaton(game->mlx);
+}
 
 // check if player hit a wall, collectibles, danger and if
 // hit the last collectible, change the exit texture
@@ -62,27 +92,6 @@ void	update_map(int x, int y, t_game *game)
 	draw_player(game->keycode, 0, game);
 	snprintf(str, sizeof(str), "%d", ++game->moves);
 	mlx_string_put(game->mlx, game->win, 6, 20, 0x00FFFFFF, str);
-}
-
-// random number generator based on reading /dev/urandom
-// print_error(-1); = Failed to open/read /dev/urandom
-int	rng(int min, int max)
-{
-	int		random_data;
-	int		fd;
-	ssize_t	bytes_read;
-
-	random_data = 0;
-	fd = open("/dev/urandom", O_RDONLY);
-	if (fd < 0)
-		print_error(-1);
-	bytes_read = read(fd, &random_data, sizeof(random_data));
-	if (bytes_read < 0)
-		print_error(-1);
-	close(fd);
-	if (random_data < 0)
-		return ((-random_data % (max - min + 1)) + min);
-	return ((random_data % (max - min + 1)) + min);
 }
 
 void	create_image(char *path, t_image *image, t_game *game)
