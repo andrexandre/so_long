@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_func.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: andrealex <andrealex@student.42.fr>        +#+  +:+       +#+        */
+/*   By: analexan <analexan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 17:36:08 by analexan          #+#    #+#             */
-/*   Updated: 2023/09/26 22:02:26 by andrealex        ###   ########.fr       */
+/*   Updated: 2023/10/20 12:23:32 by analexan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,6 @@ void	update_map(int x, int y, t_game *game)
 	image_to_window(game->i.wall, 0, 0, game);
 	if (game->map[y][x] == 'E')
 		image_to_window(game->i.exit,
-			x * game->tile_width, y * game->tile_height, game);
-	else if (game->map[y][x] == 'D')
-		image_to_window(game->i.danger,
 			x * game->tile_width, y * game->tile_height, game);
 	else
 		image_to_window(game->i.ground,
