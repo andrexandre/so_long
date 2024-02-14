@@ -10,7 +10,8 @@ CC		:= cc
 FLAGS	:= -Wall -Wextra -Werror
 
 SRC_DIR	:= srcs
-SRC		:= $(wildcard $(SRC_DIR)/*.c)
+SRC		:= check_map.c  draw_map.c  editor.c  game_func.c  get_next_line.c  mouse.c  quit_game.c  so_long.c  tool_lib.c
+SRC		:= $(addprefix srcs/,$(SRC))
 OBJ		:= $(SRC:.c=.o)
 RM		:= rm -f
 
