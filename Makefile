@@ -42,12 +42,14 @@ fclean:		clean
 
 re:			fclean all
 
+VARS	:= maps/test.ber
+
 run: ${NAME}
 	@echo "$(CYAN)Window displayed. $(BLUE)Ctrl + C to exit."; \
-	./${NAME}
+	./${NAME} ${VARS}
 
 v: ${NAME}
-	@output=$$(valgrind --leak-check=full ./${NAME} 2>&1); \
+	@output=$$(valgrind --leak-check=full ./${NAME} ${VARS} 2>&1); \
 	if echo "$$output" | grep -q 'freed' && echo "$$output" | grep -q '0 errors' ; then\
 		echo -n "$(GREEN)"; echo "$$output" | grep -E 'freed|total|ERROR S' | sed 's/^[^ ]* //';\
 	else\
@@ -57,13 +59,13 @@ v: ${NAME}
 t	:= 10
 
 t:	${NAME}
-	@./${NAME} & PID=$$!; \
+	@./${NAME} ${VARS} & PID=$$!; \
 	echo "$(CYAN)Window displayed. $(BLUE)PID: $$PID$(END)"; \
 	sleep ${t}; \
 	kill $$PID
 
 val:	${NAME}
-	@valgrind ./${NAME}
+	@valgrind ./${NAME} ${VARS}
 
 e: fclean
 
