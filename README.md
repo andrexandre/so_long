@@ -15,7 +15,7 @@ A simple 2D game developed using [MinilibX](https://github.com/42Paris/minilibx-
 git clone https://github.com/andrexandre/so_long.git ; cd so_long
 ```
 
-2. Compile the library
+2. Compile the program
 ```sh
 make
 ```
